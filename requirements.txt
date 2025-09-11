@@ -1,6 +1,7 @@
 pandas
 matplotlib
 statsmodels
+scikit-learn
 seaborn
 plotly
 sqlalchemy
