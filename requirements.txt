@@ -1,5 +1,6 @@
 pandas
 matplotlib
+statsmodels
 seaborn
 plotly
 sqlalchemy
