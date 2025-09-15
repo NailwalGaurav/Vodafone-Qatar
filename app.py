@@ -451,7 +451,8 @@ def dashboard():
         
      # 1. Revenue by Region
         df_filtered["Revenue_QR_QAR"] = df_filtered["Revenue_QR_Mn"] * 1_000_000  # convert to QAR
-        
+        df_filtered["ARPU_QAR"] = df_filtered["Revenue_QR_QAR"] / df_filtered["Subscribers"]
+
         reg_rev = df_filtered.groupby('Region', as_index=False)["Revenue_QR_QAR"].sum()
         st.subheader("Revenue by Region")
         fig, ax = plt.subplots(figsize=(8, 6))
@@ -482,25 +483,25 @@ def dashboard():
 
 
     # 2. ARPU by Region
-        seg_rev = df_filtered.groupby('Region')['ARPU_QR'].sum().reset_index()
+        seg_rev = df_filtered.groupby('Region')['ARPU_QAR'].mean().reset_index()
         st.subheader("ARPU by Region")
         fig, ax = plt.subplots(figsize=(8,6))
         sns.barplot(
         data=seg_rev, 
         x='Region', 
-        y='ARPU_QR', 
+        y='ARPU_QAR', 
         palette="viridis",
         ax=ax
     )
         
-        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1000:.0f}K"))
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1000:.2f}K"))
         for i, row in seg_rev.iterrows():
-            ax.text(i, row['ARPU_QR'], f"{row['ARPU_QR']/1000:.3f}K",
+            ax.text(i, row['ARPU_QAR'], f"{row['ARPU_QAR']/1000:.3f}K QAR",
                 ha='center', va='bottom', fontsize=9)
 
         ax.set_title("ARPU by Region")
         ax.set_xlabel("Region")
-        ax.set_ylabel("ARPU_QR (in K)")
+        ax.set_ylabel("ARPU in thousands")
 
         st.pyplot(fig)
 
@@ -531,27 +532,27 @@ def dashboard():
 
 
     # 4. ARPU Trend over Years
-        rev_year = df_filtered.groupby('Year')['ARPU_QR'].sum().reset_index()
+        rev_year = df_filtered.groupby('Year')['ARPU_QAR'].mean().reset_index()
         st.subheader("ARPU Trend over Years")
         fig, ax = plt.subplots(figsize=(10,6))
         sns.lineplot(
         data=rev_year, 
         x='Year', 
-        y='ARPU_QR', 
+        y='ARPU_QAR', 
         marker='o', 
         linewidth=2,
         ax=ax
     )
 
         ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1000:.1f}k"))
-        for x, y in zip(rev_year['Year'], rev_year['ARPU_QR']):
-            ax.text(x, y, f"{y/1000:.3f}k", ha='center', va='bottom', fontsize=9)
+        for x, y in zip(rev_year['Year'], rev_year['ARPU_QAR']):
+            ax.text(x, y, f"{y/1000:.3f}k QAR", ha='center', va='bottom', fontsize=9)
 
         ax.set_title("ARPU Trend Over Years")
         ax.set_xlabel("Year")
         ax.set_ylabel("ARPU")
         ax.set_xticks(rev_year['Year'])
-        ax.set_ylim(0, rev_year['ARPU_QR'].max() * 1.2)
+        ax.set_ylim(0, rev_year['ARPU_QAR'].max() * 1.2)
   
         st.pyplot(fig)
 
@@ -580,24 +581,24 @@ def dashboard():
 
 
     # 6. ARPU by Segment
-        seg_rev = df_filtered.groupby('Segment')['ARPU_QR'].sum().reset_index()
+        seg_rev = df_filtered.groupby('Segment')['ARPU_QAR'].mean().reset_index()
         st.subheader("ARPU by Segment")
         fig, ax = plt.subplots(figsize=(8,6))
         sns.barplot(
         data=seg_rev, 
         x='Segment', 
-        y='ARPU_QR', 
+        y='ARPU_QAR', 
         palette="viridis",
         ax=ax
     )
 
-        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1000:.0f}K"))
+        ax.yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f"{x/1000:.2f}K"))
         for i, row in seg_rev.iterrows():
-            ax.text(i, row['ARPU_QR'], f"{row['ARPU_QR']/1000:.3f}K", ha='center', va='bottom', fontsize=9)
+            ax.text(i, row['ARPU_QAR'], f"{row['ARPU_QAR']/1000:.3f}K QAR", ha='center', va='bottom', fontsize=9)
 
         ax.set_title("ARPU by Segment")
         ax.set_xlabel("Segment")
-        ax.set_ylabel("ARPU_QR (in K)")
+        ax.set_ylabel("ARPU in thousands")
 
         st.pyplot(fig)
 
@@ -605,10 +606,10 @@ def dashboard():
     # 7. ARPU by Quarters
 # Group by Year & Quarter and compute mean ARPU, rename to ARPU_K for clarity
         arpu_quarter = (
-    df_filtered.groupby(['Year', 'Quarter'])['ARPU_QR']
+    df_filtered.groupby(['Year', 'Quarter'])['ARPU_QAR']
     .mean()
     .reset_index()
-    .rename(columns={'ARPU_QR': 'ARPU_K'})
+    .rename(columns={'ARPU_QAR': 'ARPU_K'})
 )
 
         st.subheader("ARPU by Quarters")
@@ -634,7 +635,7 @@ def dashboard():
                 ax.text(
             x,
             y,
-            f"{y/1000:.3f}k",
+            f"{y/1000:.3f}k QAR",
             ha='center',
             va='bottom',
             fontsize=8
@@ -642,7 +643,7 @@ def dashboard():
 
         ax.set_title("ARPU by Quarters")
         ax.set_xlabel("Quarter")
-        ax.set_ylabel("ARPU (in Thousands QAR)")
+        ax.set_ylabel("ARPU in thousands)")
         st.pyplot(fig)
 
 
