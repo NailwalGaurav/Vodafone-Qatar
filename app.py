@@ -1357,7 +1357,7 @@ def dashboard():
         f"{row['Network_Availability_Pct']:.1f}%",
         ha='center', va='top', color='black', fontsize=11
     )
-        
+        ax1.set_title("Network Availability % Over Years")
         ax1.set_ylim(90, 100)
         ax1.set_xlabel("Year")
         ax1.set_ylabel("Network Availability (%)")
@@ -1391,7 +1391,7 @@ def dashboard():
         f"{row['Network_Availability_Pct']:.1f}%",
         ha='center', va='top', color='black', fontsize=11
     )
-        
+        ax2.set_title("Network Availability % by Regions")
         ax2.set_ylim(90, 100)
         ax2.set_xlabel("Region")
         ax2.set_ylabel("Network Availability (%)")
@@ -1424,7 +1424,7 @@ def dashboard():
         f"{row['Network_Availability_Pct']:.1f}%",
         ha='center', va='top', color='black', fontsize=11 
     )
-        
+        ax3.set_title("Network Availability % by Segment")
         ax3.set_ylim(90, 100)
         ax3.set_xlabel("Segment")
         ax3.set_ylabel("Network Availability (%)")
@@ -1697,7 +1697,7 @@ def dashboard():
       .reset_index()
       .sort_values(["Region", "Year"])
 )
-        st.subheader("📶 eSIM Activations by Region Over Years")
+        st.subheader("📶 eSIM Activations Over Years")
 # Plot using Matplotlib
         fig, ax = plt.subplots(figsize=(12, 6))
         regions = avg_esim_by_region["Region"].unique()
@@ -1716,11 +1716,11 @@ def dashboard():
         for x, y in zip(region_data["Year"], region_data["eSIM_Activations"] / 1000):
             ax.text(x, y, f"{y:.2f}K", ha="center", va="bottom", fontsize=9)
 
-        ax.set_title("eSIM Activations by Region Over Years")
+        ax.set_title("eSIM Activations Over Years")
         ax.set_xlabel("Year")
         ax.set_ylabel("Total eSIM Activations (in Thousands)")
         ax.set_xticks(sorted(df["Year"].unique()))
-        ax.legend(title="Region")
+        #ax.legend(title="Region")
         fig.tight_layout()
     
         st.pyplot(fig)
