@@ -37,12 +37,12 @@ future_subscriber = st.sidebar.number_input(
     value=300_000,
     step=10_000
 )
-
+@st.cache_data
 if st.sidebar.button("Run Forecast"):
     # ================================
     # Load and Preprocess CSV
     # ================================
-    df = pd.read_csv("sqldata.csv")
+    df = pd.read_csv("voda.csv")
 
     quarter_to_month = {"Q1": 1, "Q2": 4, "Q3": 7, "Q4": 10}
     df["Month"] = df["Quarter"].map(quarter_to_month)
@@ -247,4 +247,5 @@ if st.sidebar.button("Run Forecast"):
     ax.set_xlabel("Date")
     ax.legend()
     st.pyplot(fig)
+
 
